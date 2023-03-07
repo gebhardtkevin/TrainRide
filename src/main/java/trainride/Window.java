@@ -1,7 +1,8 @@
 package trainride;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
+import java.awt.Component;
 
 public class Window {
     JFrame mainWindow;

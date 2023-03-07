@@ -44,7 +44,6 @@ public class PathManager {
                 filter(this::isEndPoint).
                 toList();
         trackTerminationPoints.forEach(startTile -> {
-            startTile.setRed();
             if (!usedEndPoints.contains(startTile)) {
                 usedEndPoints.add(startTile);
 
@@ -86,7 +85,7 @@ public class PathManager {
     }
 
     private boolean isEndPoint(TrackTile tile) {
-        return getConnected(tile).size() == 1;
+        return getConnected(tile).size() < 2;
     }
 
     private List<TrackTile> getConnected(TrackTile tile) {
@@ -109,6 +108,9 @@ public class PathManager {
     private boolean isBackwards(TrackTile nextTrack,TrackTile thisTrack){
         //check direction of startPoint
         if (thisTrack==null&&isEndPoint(nextTrack)){
+            if (getConnected((nextTrack)).isEmpty()){
+                return false;
+            }
             var nextNextTrack = getConnected(nextTrack).get(0);
             Point nextNextFirst = nextNextTrack.getTrackPath().toWorldCoordinates(nextNextTrack).first();
             Point nextNextLast = nextNextTrack.getTrackPath().toWorldCoordinates(nextNextTrack).last();
