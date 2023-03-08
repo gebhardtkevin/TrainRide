@@ -40,13 +40,13 @@ public class TrackTile extends StandardTile implements PathProvider,Tile {
                     new TrackPath(
                         new Point(worldPositionX, tileSize / 2),
                         new Point(worldPositionX + tileSize, tileSize / 2))
-                        .rotate(Math.toRadians(rotation), center);
+                        .rotate(rotation, center);
             case CURVE ->
                     new TrackPath(
                         new Point(worldPositionX, worldPositionY + tileSize / 2),
                         new Point(worldPositionX + tileSize / 2, worldPositionY + tileSize / 2),
                         new Point(worldPositionX + tileSize / 2, worldPositionY + tileSize))
-                        .rotate(Math.toRadians(rotation), center);
+                        .rotate(rotation, center);
             default -> null;
         };
     }

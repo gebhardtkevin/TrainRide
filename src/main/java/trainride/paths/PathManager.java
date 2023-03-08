@@ -57,7 +57,7 @@ public class PathManager {
                     if (isBackwards(currentTrack,previousTrack)){
                         currentTrack.getTrackPath().reverse();
                     }
-                    path.attachPath(currentTrack.getTrackPath().toWorldCoordinates(currentTrack));
+                    path.attachPath(currentTrack.getTrackPath().toWorldCoordinates(currentTrack.getWorldPosition()));
                     nextTrack = findNextTrack(previousTrack, currentTrack);
                     if (nextTrack == null) {
                         usedEndPoints.add(currentTrack);
@@ -98,10 +98,13 @@ public class PathManager {
         if (thisTrack==null||nextTrack==null||thisTrack.equals(nextTrack)) {
             return false;
         }
-        Point thisFirst = thisTrack.getTrackPath().toWorldCoordinates(thisTrack).first();
-        Point thisLast = thisTrack.getTrackPath().toWorldCoordinates(thisTrack).last();
-        Point nextFirst = nextTrack.getTrackPath().toWorldCoordinates(nextTrack).first();
-        Point nextLast = nextTrack.getTrackPath().toWorldCoordinates(nextTrack).last();
+        Point worldPositionThis = thisTrack.getWorldPosition();
+        Point worldPositionNext = nextTrack.getWorldPosition();
+
+        Point thisFirst = thisTrack.getTrackPath().toWorldCoordinates(worldPositionThis).first();
+        Point thisLast = thisTrack.getTrackPath().toWorldCoordinates(worldPositionThis).last();
+        Point nextFirst = nextTrack.getTrackPath().toWorldCoordinates(worldPositionNext).first();
+        Point nextLast = nextTrack.getTrackPath().toWorldCoordinates(worldPositionNext).last();
         return thisFirst.equals(nextFirst) || thisFirst.equals(nextLast) || thisLast.equals(nextFirst) || thisLast.equals(nextLast);
     }
 
@@ -112,9 +115,13 @@ public class PathManager {
                 return false;
             }
             var nextNextTrack = getConnected(nextTrack).get(0);
-            Point nextNextFirst = nextNextTrack.getTrackPath().toWorldCoordinates(nextNextTrack).first();
-            Point nextNextLast = nextNextTrack.getTrackPath().toWorldCoordinates(nextNextTrack).last();
-            Point nextFirst = nextTrack.getTrackPath().toWorldCoordinates(nextTrack).first();
+
+            Point worldPositionNextNext = nextNextTrack.getWorldPosition();
+            Point worldPositionNext = nextTrack.getWorldPosition();
+
+            Point nextNextFirst = nextNextTrack.getTrackPath().toWorldCoordinates(worldPositionNextNext).first();
+            Point nextNextLast = nextNextTrack.getTrackPath().toWorldCoordinates(worldPositionNextNext).last();
+            Point nextFirst = nextTrack.getTrackPath().toWorldCoordinates(worldPositionNext).first();
             return nextFirst.equals(nextNextFirst)||nextFirst.equals(nextNextLast);
         }
 
@@ -122,11 +129,12 @@ public class PathManager {
         if (nextTrack==null||Objects.equals(thisTrack,nextTrack)||!isConnected(nextTrack,thisTrack)) {
             return false;
         }
-
-        Point thisFirst = thisTrack.getTrackPath().toWorldCoordinates(thisTrack).first();
-        Point thisLast = thisTrack.getTrackPath().toWorldCoordinates(thisTrack).last();
-        Point nextFirst = nextTrack.getTrackPath().toWorldCoordinates(nextTrack).first();
-        Point nextLast = nextTrack.getTrackPath().toWorldCoordinates(nextTrack).last();
+        var worldPositionThis = thisTrack.getWorldPosition();
+        var worldPositionNext = nextTrack.getWorldPosition();
+        Point thisFirst = thisTrack.getTrackPath().toWorldCoordinates(worldPositionThis).first();
+        Point thisLast = thisTrack.getTrackPath().toWorldCoordinates(worldPositionThis).last();
+        Point nextFirst = nextTrack.getTrackPath().toWorldCoordinates(worldPositionNext).first();
+        Point nextLast = nextTrack.getTrackPath().toWorldCoordinates(worldPositionNext).last();
 
         return thisLast.equals(nextLast)||thisFirst.equals(nextFirst);
     }

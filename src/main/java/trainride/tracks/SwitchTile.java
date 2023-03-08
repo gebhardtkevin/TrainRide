@@ -42,19 +42,19 @@ public class SwitchTile extends TrackTile implements PathProvider, Tile {
             return new TrackPath(
                     new Point(worldPositionX + tileSize / 2, worldPositionY),
                     new Point(worldPositionX + tileSize / 2, worldPositionY + tileSize)).
-                    rotate(Math.toRadians(rotation), center);
+                    rotate(rotation, center);
         if (switchStatus == 1)//Curve Up->Left
             return new TrackPath(
                     new Point(worldPositionX + tileSize / 2, worldPositionY),
                     new Point(worldPositionX + tileSize / 2, worldPositionY + tileSize / 2),
                     new Point(worldPositionX, worldPositionY + tileSize / 2)).
-                    rotate(Math.toRadians(rotation), center);
+                    rotate(rotation, center);
         if (switchStatus == 2)//Curve Down->Left
             return new TrackPath(
                     new Point(worldPositionX + tileSize / 2, worldPositionY + tileSize),
                     new Point(worldPositionX + tileSize / 2, worldPositionY + tileSize / 2),
                     new Point(worldPositionX, worldPositionY + tileSize / 2)).
-                    rotate(Math.toRadians(rotation), center);
+                    rotate(rotation, center);
         return null;
     }
 

@@ -2,6 +2,7 @@ package trainride.entities;
 
 import trainride.GamePanel;
 import trainride.KeyHandler;
+import trainride.paths.TrackPath;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -11,24 +12,24 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Player extends Entity{
+public class Player extends Entity {
 
-    private static final  int PLAYER_MOVING_DELAY_IN_FRAMES = 20;
+    private static final int PLAYER_MOVING_DELAY_IN_FRAMES = 20;
     private final transient KeyHandler keys;
 
-    private final transient BufferedImage[] spriteUp  = new BufferedImage[MAX_SPRITE_NUM];
-    private final transient BufferedImage[] spriteDown= new BufferedImage[MAX_SPRITE_NUM];
-    private final transient BufferedImage[] spriteLeft= new BufferedImage[MAX_SPRITE_NUM];
-    private final transient BufferedImage[] spriteRight= new BufferedImage[MAX_SPRITE_NUM];
+    private final transient BufferedImage[] spriteUp = new BufferedImage[MAX_SPRITE_NUM];
+    private final transient BufferedImage[] spriteDown = new BufferedImage[MAX_SPRITE_NUM];
+    private final transient BufferedImage[] spriteLeft = new BufferedImage[MAX_SPRITE_NUM];
+    private final transient BufferedImage[] spriteRight = new BufferedImage[MAX_SPRITE_NUM];
 
     GamePanel panel = GamePanel.getInstance();
 
     public Player(int worldPosX, int worldPosY, int speed, KeyHandler handler) {
         super(worldPosX, worldPosY, speed);
-        this.screenX =panel.getScreenWidth()/2-panel.getTileSize()/2;
-        this.screenY = panel.getScreenHeight()/2-panel.getTileSize()/2;
+        this.screenX = panel.getScreenWidth() / 2 - panel.getTileSize() / 2;
+        this.screenY = panel.getScreenHeight() / 2 - panel.getTileSize() / 2;
         this.keys = handler;
-        setSolidArea(5*panel.getScale(),5*panel.getScale(),6*panel.getScale(),9*panel.getScale());
+        setSolidArea(5 * panel.getScale(), 5 * panel.getScale(), 6 * panel.getScale(), 9 * panel.getScale());
         loadImages();
     }
 
@@ -42,8 +43,8 @@ public class Player extends Entity{
             spriteUp[1] = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Player/train2Up.png")));
             spriteDown[0] = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Player/train1Down.png")));
             spriteDown[1] = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Player/train2Down.png")));
-        }catch (IOException e){
-            Logger.getGlobal().log(Level.SEVERE,"Kann Player-Sprites nicht laden!");
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Kann Player-Sprites nicht laden!");
         }
     }
 
@@ -56,42 +57,82 @@ public class Player extends Entity{
                 '}';
     }
 
+    public void setOnTrack(TrackPath path) {
+        this.path = path;
+        setX(path.first().x - GamePanel.getInstance().getTileSize() / 2);
+        setY(path.first().y - GamePanel.getInstance().getTileSize() / 2);
+    }
+
     public void update() {
-        if (keys.isDownPressed()&&
-                panel.getCollisionDetection().isNotColliding(this, Direction.DOWN)){
+        int speedDirection = 0;
+        if (keys.plusWasPressed()) {
+            speedDirection = 1;
+            keys.resetPlusWasPressed();
+        }
+        if (keys.minusWasPressed()) {
+            speedDirection = -1;
+            keys.resetMinusWasPressed();
+        }
+
+        Point playerCenterInWorld = new Point(
+                this.getX() + GamePanel.getInstance().getTileSize() / 2,
+                this.getY() + GamePanel.getInstance().getTileSize() / 2);
+
+        Point nextPosition = this.path.moveOnPath(playerCenterInWorld, speed);
+        this.setCenterToWorldPos(nextPosition);
+        this.direction = Direction.getDirection(playerCenterInWorld, nextPosition);
+        if (path.isTrackEnd(nextPosition)) {
+            this.speed = 0;
+        }
+        incrementFrameCounter();
+        this.speed = this.speed + speedDirection;
+        if (getFrameCounter() > PLAYER_MOVING_DELAY_IN_FRAMES) {
+            resetFrameCounter();
+            toggleSpriteNum();
+
+        }
+
+    }
+
+    public void updateWalking() {
+        if (keys.isDownPressed() &&
+                panel.getCollisionDetection().isNotColliding(this, Direction.DOWN)) {
             this.down();
         }
-        if (keys.isUpPressed()&&
-                panel.getCollisionDetection().isNotColliding(this, Direction.UP)){
+        if (keys.isUpPressed() &&
+                panel.getCollisionDetection().isNotColliding(this, Direction.UP)) {
             this.up();
         }
-        if (keys.isLeftPressed()&&
-                panel.getCollisionDetection().isNotColliding(this, Direction.LEFT)){
+        if (keys.isLeftPressed() &&
+                panel.getCollisionDetection().isNotColliding(this, Direction.LEFT)) {
             this.left();
         }
 
-        if (keys.isRightPressed()&&
-                panel.getCollisionDetection().isNotColliding(this, Direction.RIGHT)){
+        if (keys.isRightPressed() &&
+                panel.getCollisionDetection().isNotColliding(this, Direction.RIGHT)) {
             this.right();
         }
         incrementFrameCounter();
-        if (getFrameCounter()>PLAYER_MOVING_DELAY_IN_FRAMES){
+        if (getFrameCounter() > PLAYER_MOVING_DELAY_IN_FRAMES) {
             resetFrameCounter();
             toggleSpriteNum();
         }
     }
+
     public void draw(Graphics2D graphics) {
         BufferedImage image;
-        switch (direction){
+        switch (direction) {
             case UP -> image = spriteUp[getSpriteNum()];
             case DOWN -> image = spriteDown[getSpriteNum()];
             case LEFT -> image = spriteLeft[getSpriteNum()];
             default -> image = spriteRight[getSpriteNum()];
         }
-        graphics.drawImage(image, screenX,screenY, panel.getTileSize(), panel.getTileSize(),null);
+        graphics.drawImage(image, screenX, screenY, panel.getTileSize(), panel.getTileSize(), null);
+        System.out.println("Speed : " + speed);
     }
+
     @Override
-    public  Point getSize(){
-        return new Point(panel.getTileSize(),panel.getTileSize());
+    public Point getSize() {
+        return new Point(panel.getTileSize(), panel.getTileSize());
     }
 }

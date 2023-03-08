@@ -1,10 +1,14 @@
 package trainride.entities;
 
+import trainride.GamePanel;
+import trainride.paths.TrackPath;
+
 import java.awt.*;
 import java.io.Serializable;
 
 public class Entity implements Serializable {
 
+    TrackPath path;
     int posX;
     int posY;
     int speed;
@@ -112,5 +116,10 @@ public class Entity implements Serializable {
 
     public Point getSize() {
         return new Point(0,0);
+    }
+
+    protected void setCenterToWorldPos(Point center) {
+        this.posX = center.x- GamePanel.getInstance().getTileSize()/2;
+        this.posY = center.y- GamePanel.getInstance().getTileSize()/2;
     }
 }

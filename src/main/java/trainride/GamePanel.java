@@ -32,8 +32,8 @@ public class GamePanel extends JPanel {
     private final transient KeyHandler keys;
     private static GamePanel instance = null;
 
-    public static GamePanel getInstance(){
-        if (null==instance){
+    public static GamePanel getInstance() {
+        if (null == instance) {
             instance = new GamePanel();
         }
         return instance;
@@ -60,9 +60,10 @@ public class GamePanel extends JPanel {
 
     public void start() {
         this.collisionDetection = new CollisionDetectionWalking();
-        this.player = new Player(12 * tileSize, 9 * tileSize, 2*scale, keys);
+        this.player = new Player(12 * tileSize, 9 * tileSize, 1, keys);
         this.tileManager = new TileManager();
         setMap("/Maps/map1.map");
+        player.setOnTrack(this.tileManager.getPaths().get(0));
         new Thread(this::run).start();
     }
 
@@ -146,5 +147,9 @@ public class GamePanel extends JPanel {
 
     public Point getWorldTiles() {
         return worldTiles;
+    }
+
+    public boolean isDebugMode() {
+        return false;
     }
 }

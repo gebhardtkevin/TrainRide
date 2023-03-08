@@ -77,7 +77,9 @@ public class TileManager {
                             : tiles[column][row];
                     tile.draw(graphics, new Point(screenX, screenY));
                 }));
-        paths.forEach(path -> path.draw(graphics, new Point(0, 0)));
+        if (GamePanel.getInstance().isDebugMode()) {
+            paths.forEach(path -> path.draw(graphics, new Point(0, 0)));
+        }
     }
 
     public void loadMap(String map) {
@@ -127,6 +129,10 @@ public class TileManager {
 
     public List<Tile> getTiles() {
         return Stream.of(tiles).flatMap(Stream::of).toList();
+    }
+
+    public List<TrackPath> getPaths() {
+        return paths;
     }
 }
 
