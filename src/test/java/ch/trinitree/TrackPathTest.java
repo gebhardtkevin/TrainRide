@@ -184,8 +184,7 @@ class TrackPathTest {
         TrackPath t3 = new TrackPath(new Point(0, 5), new Point(10, 5));
         assertTrue(t1.equals(t2) && t2.equals(t1));
         assertEquals(t1.hashCode(), t2.hashCode());
-        assertFalse(t1.equals(t3) && t3.equals(t1));
-        assertEquals(t1.hashCode(), t3.hashCode());
+        assertFalse(t1.equals(t3) || t3.equals(t1));
     }
 
     @Test

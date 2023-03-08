@@ -26,7 +26,8 @@ public enum TileType {
     TRACK_BRIDGE_CURVE_S('m', TilePaths.CURVE_BRIDGE, 0),
     TRACK_BRIDGE_CURVE_W(',', TilePaths.CURVE_BRIDGE, 90),
     TRACK_BRIDGE_CURVE_N('.', TilePaths.CURVE_BRIDGE, 180),
-    TRACK_BRIDGE_CURVE_E('-', TilePaths.CURVE_BRIDGE, 270);
+    TRACK_BRIDGE_CURVE_E('-', TilePaths.CURVE_BRIDGE, 270),
+    OUTSIDE('?',TilePaths.WATER , 0);
 
 
     private final char code;
@@ -49,7 +50,7 @@ public enum TileType {
                 return t;
             }
         }
-        return GRAS;
+        return OUTSIDE;
     }
 
     public BufferedImage getImage() {

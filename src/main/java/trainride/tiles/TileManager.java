@@ -37,6 +37,8 @@ public class TileManager {
         tileTypes.put(TileType.WATER, new StandardTile(TileType.WATER.getImage(), true));
         tileTypes.put(TileType.STONE, new StandardTile(TileType.STONE.getImage(), true));
         tileTypes.put(TileType.TREE, new StandardTile(TileType.TREE.getImage(), true));
+        tileTypes.put(TileType.OUTSIDE, new StandardTile(TileType.OUTSIDE.getImage(),true));
+
         tileTypes.put(TileType.TRACK_HORIZONTAL, new TrackTile(TileType.TRACK_HORIZONTAL.getImage(), TrackType.TRACK, TileType.TRACK_HORIZONTAL.getRotation()));
         tileTypes.put(TileType.TRACK_VERTICAL, new TrackTile(TileType.TRACK_VERTICAL.getImage(), TrackType.TRACK, TileType.TRACK_VERTICAL.getRotation()));
         tileTypes.put(TileType.TRACK_BRIDGE_HORIZONTAL, new TrackTile(TileType.TRACK_BRIDGE_HORIZONTAL.getImage(), TrackType.TRACK, TileType.TRACK_BRIDGE_HORIZONTAL.getRotation()));
@@ -53,7 +55,7 @@ public class TileManager {
         tileTypes.put(TileType.TRACK_BRIDGE_CURVE_E/*┌*/, new TrackTile(TileType.TRACK_BRIDGE_CURVE_E.getImage(), TrackType.CURVE, TileType.TRACK_BRIDGE_CURVE_E.getRotation()));
         tileTypes.put(TileType.TRACK_BRIDGE_CURVE_S/*┐*/, new TrackTile(TileType.TRACK_BRIDGE_CURVE_S.getImage(), TrackType.CURVE, TileType.TRACK_BRIDGE_CURVE_S.getRotation()));
         tileTypes.put(TileType.TRACK_BRIDGE_CURVE_W/*┘*/, new TrackTile(TileType.TRACK_BRIDGE_CURVE_W.getImage(), TrackType.CURVE, TileType.TRACK_BRIDGE_CURVE_W.getRotation()));
-    }
+     }
 
     public void draw(Graphics2D graphics) {
         Point playerWorldPosition = panel.getPlayer().getWorldPos();
@@ -72,9 +74,7 @@ public class TileManager {
                     int screenX = worldX - playerWorldPosition.x + playerScreenPosition.x;
                     int screenY = worldY - playerWorldPosition.y + playerScreenPosition.y;
 
-                    Tile tile = (column < 0 || row < 0 || column >= mapSize.x || row >= mapSize.y)
-                            ? tileTypes.get(TileType.TREE)
-                            : tiles[column][row];
+                    Tile tile = getTileAt(column,row);
                     tile.draw(graphics, new Point(screenX, screenY));
                 }));
         if (GamePanel.getInstance().isDebugMode()) {
@@ -122,7 +122,7 @@ public class TileManager {
 
     public Tile getTileAt(int column, int row) {
         if (row < 0 || column < 0 || row >= getMapSize().y || column >= getMapSize().x) {
-            return tileTypes.get(TileType.TREE);
+            return tileTypes.get(TileType.OUTSIDE);
         }
         return tiles[column][row];
     }

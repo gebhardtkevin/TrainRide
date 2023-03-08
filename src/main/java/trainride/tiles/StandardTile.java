@@ -51,12 +51,16 @@ public class StandardTile implements Tile{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tile tile = (Tile) o;
-        return isSolid == tile.isSolid() && image.equals(tile.getImage()) && rotation == tile.getRotation();
+        return isSolid == tile.isSolid() &&
+                rotation == tile.getRotation() &&
+                isTrack() ==tile.isTrack()&&
+                isSwitch()==tile.isSwitch()&&
+                getWorldPosition().equals(tile.getWorldPosition());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(image, isSolid, rotation);
+        return Objects.hash(isSolid, rotation,getWorldPosition());
     }
 
     public Point getWorldPosition() {
