@@ -5,26 +5,43 @@ import trainride.paths.TrackPath;
 import trainride.tiles.Tile;
 import trainride.tiles.TileType;
 
-import java.awt.Point;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Objects;
 
 public class SwitchTile extends TrackTile implements PathProvider, Tile {
     private final TrackPath path;
     int switchStatus = 2;
 
+    BufferedImage[] images = new BufferedImage[3];
+
     public SwitchTile(int rotation) {
         super(TileType.TRACK_SWITCH_W.getImage(), TrackType.SWITCH, rotation);
         this.path = getPath();
+        try {
+            images[0] = rotateImage(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Tiles/trackSwitch0.png"))),rotation);
+            images[1] = rotateImage(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Tiles/trackSwitch1.png"))),rotation);
+            images[2] = rotateImage(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Tiles/trackSwitch2.png"))),rotation);
+            super.setImage(images[switchStatus]);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
 
     public SwitchTile(SwitchTile tile) {
         super(tile);
         this.switchStatus = tile.switchStatus;
         this.path = tile.path;
+        this.images = tile.images;
+        this.setImage(tile.getImage());
     }
 
     public void toggleSwitch() {
         switchStatus = ++switchStatus % 3;
+        setImage(images[switchStatus]);
     }
 
     public int getSwitchStatus() {
@@ -33,6 +50,7 @@ public class SwitchTile extends TrackTile implements PathProvider, Tile {
 
     public void setSwitchStatus(int switchStatus) {
         this.switchStatus = switchStatus % 3;
+        setImage(images[switchStatus]);
     }
 
     private TrackPath getPath() {
@@ -94,5 +112,15 @@ public class SwitchTile extends TrackTile implements PathProvider, Tile {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), path, switchStatus);
+    }
+
+    @Override
+    public void draw(Graphics2D graphics, Point position){
+        graphics.drawImage(this.getImage(),
+                position.x,
+                position.y,
+                GamePanel.getInstance().getTileSize(),
+                GamePanel.getInstance().getTileSize(),
+                null);
     }
 }

@@ -43,10 +43,12 @@ public class TileManager {
         tileTypes.put(TileType.TRACK_VERTICAL, new TrackTile(TileType.TRACK_VERTICAL.getImage(), TrackType.TRACK, TileType.TRACK_VERTICAL.getRotation()));
         tileTypes.put(TileType.TRACK_BRIDGE_HORIZONTAL, new TrackTile(TileType.TRACK_BRIDGE_HORIZONTAL.getImage(), TrackType.TRACK, TileType.TRACK_BRIDGE_HORIZONTAL.getRotation()));
         tileTypes.put(TileType.TRACK_BRIDGE_VERTICAL, new TrackTile(TileType.TRACK_BRIDGE_VERTICAL.getImage(), TrackType.TRACK, TileType.TRACK_BRIDGE_VERTICAL.getRotation()));
+
         tileTypes.put(TileType.TRACK_SWITCH_N, new SwitchTile(TileType.TRACK_SWITCH_N.getRotation()));
         tileTypes.put(TileType.TRACK_SWITCH_E, new SwitchTile(TileType.TRACK_SWITCH_E.getRotation()));
         tileTypes.put(TileType.TRACK_SWITCH_S, new SwitchTile(TileType.TRACK_SWITCH_S.getRotation()));
         tileTypes.put(TileType.TRACK_SWITCH_W, new SwitchTile(TileType.TRACK_SWITCH_W.getRotation()));
+
         tileTypes.put(TileType.TRACK_CURVE_N/*└*/, new TrackTile(TileType.TRACK_CURVE_N.getImage(), TrackType.CURVE, TileType.TRACK_CURVE_N.getRotation()));
         tileTypes.put(TileType.TRACK_CURVE_E/*┌*/, new TrackTile(TileType.TRACK_CURVE_E.getImage(), TrackType.CURVE, TileType.TRACK_CURVE_E.getRotation()));
         tileTypes.put(TileType.TRACK_CURVE_S/*┐*/, new TrackTile(TileType.TRACK_CURVE_S.getImage(), TrackType.CURVE, TileType.TRACK_CURVE_S.getRotation()));

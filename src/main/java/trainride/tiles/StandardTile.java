@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
-public class StandardTile implements Tile{
+public class StandardTile implements Tile {
     protected int rotation;
     private BufferedImage image;
     private boolean isSolid = false;
@@ -22,7 +22,8 @@ public class StandardTile implements Tile{
     }
 
     protected StandardTile(BufferedImage image, int rotation) {
-        this.image = rotate(image, rotation);
+        this.image = image;
+        this.rotateTile(rotation);
         this.rotation = rotation;
     }
 
@@ -53,14 +54,14 @@ public class StandardTile implements Tile{
         Tile tile = (Tile) o;
         return isSolid == tile.isSolid() &&
                 rotation == tile.getRotation() &&
-                isTrack() ==tile.isTrack()&&
-                isSwitch()==tile.isSwitch()&&
+                isTrack() == tile.isTrack() &&
+                isSwitch() == tile.isSwitch() &&
                 getWorldPosition().equals(tile.getWorldPosition());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(isSolid, rotation,getWorldPosition());
+        return Objects.hash(isSolid, rotation, getWorldPosition());
     }
 
     public Point getWorldPosition() {
@@ -71,8 +72,7 @@ public class StandardTile implements Tile{
         return this.rotation;
     }
 
-    private BufferedImage rotate(BufferedImage img, double angle) {
-
+    protected BufferedImage rotateImage(BufferedImage img, double angle) {
         int w = img.getWidth();
         int h = img.getHeight();
 
@@ -84,7 +84,15 @@ public class StandardTile implements Tile{
         return rotated;
     }
 
-    public  void draw(Graphics2D graphics, Point position){
+    protected void setImage(BufferedImage image) {
+        this.image = image;
+    }
+
+    public void rotateTile(double angle) {
+        this.image = rotateImage(image, angle);
+    }
+
+    public void draw(Graphics2D graphics, Point position) {
         graphics.drawImage(getImage(),
                 position.x,
                 position.y,
@@ -94,7 +102,7 @@ public class StandardTile implements Tile{
 
     }
 
-    public boolean isTrack(){
+    public boolean isTrack() {
         return false;
     }
 
@@ -113,20 +121,20 @@ public class StandardTile implements Tile{
      * @return a cloned SwitchTile for positioning by the TileManager
      */
     @Override
-    public Tile copy(){
-     return new StandardTile(this);
+    public Tile copy() {
+        return new StandardTile(this);
     }
 
-    public Point getTilePosition(){
+    public Point getTilePosition() {
         return new Point(
-                worldPositionX/GamePanel.getInstance().getTileSize(),
-                worldPositionY/GamePanel.getInstance().getTileSize());
+                worldPositionX / GamePanel.getInstance().getTileSize(),
+                worldPositionY / GamePanel.getInstance().getTileSize());
     }
 
-    public void setRed(){
+    public void setRed() {
         try {
             this.image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Tiles/red.png")));
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
